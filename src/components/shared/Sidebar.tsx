@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import logotipo_horizontal_uac from "../../assets/images/logotipo_blanco_horizontal_uac.png"
-import { Briefcase, FileUser, Megaphone, SquareUserRound } from "lucide-react";
+import { Briefcase, FileUser, Megaphone, SquareUserRound, Building2 } from "lucide-react";
 
 interface MenuItemProps {
   to: string;
@@ -38,6 +38,7 @@ export function Sidebar() {
             </div>
             <ul className="flex flex-col w-full justify-between">
               <MenuItem to="/cargos" icon={<Briefcase />} text="Cargos" />
+              <MenuItem to="/dependencias" icon={<Building2 />} text="Dependencias" />
               <MenuItem to="/solicitudes" icon={<FileUser />} text="Solicitudes" />
               <MenuItem to="/convocatorias" icon={<Megaphone />} text="Convocatorias" />
               <MenuItem to="/aplicantes" icon={<SquareUserRound />} text="Aplicantes" />

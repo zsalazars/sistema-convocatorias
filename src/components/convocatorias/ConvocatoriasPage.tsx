@@ -1,4 +1,3 @@
-import React from 'react'
 import ConvocatoriasForm from './ConvocatoriasForm'
 
 function Convocatorias() {

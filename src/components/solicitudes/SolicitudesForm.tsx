@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import { format } from "date-fns"
 import { es } from "date-fns/locale";
@@ -31,37 +31,28 @@ import {
   CommandItem,
   CommandList,
 } from "@/components/ui/command"
-
-const cargos = [
-  {
-    value: "next.js",
-    label: "Next.js",
-  },
-  {
-    value: "sveltekit",
-    label: "SvelteKit",
-  },
-  {
-    value: "nuxt.js",
-    label: "Nuxt.js",
-  },
-  {
-    value: "remix",
-    label: "Remix",
-  },
-  {
-    value: "astro",
-    label: "Astro",
-  },
-]
+import { getAllCargos } from '@/services/api/cargo.api';
+import { Cargo } from '@/interfaces/model/Cargo';
+import { getAllDependencias } from '@/services/api/dependencia.api';
+import { Dependencia } from '@/interfaces/model/Dependencia';
+import LoadingSpinner from '../shared/ui/LoadingSpinner';
 
 const SolicitudesForm: React.FC = () => {
   const [title, setTitle] = useState('');
   const [proveido, setProveido] = useState('');
-  const [date, setDate] = React.useState<Date>()
+  const [date, setDate] = useState<Date>()
 
-  const [open, setOpen] = React.useState(false)
-  const [value, setValue] = React.useState("")
+  const [openDependencia, setOpenDependencia] = useState(false)
+  const [openCargo, setOpenCargo] = useState(false)
+
+  const [dependenciasList, setDependenciasList] = useState<Dependencia[]>([])
+  const [cargosList, setCargosList] = useState<Cargo[]>([])
+
+  const [selectedDependencia, setSelectedDependencia] = useState<Dependencia | null>(null);
+  const [selectedCargo, setSelectedCargo] = useState<Cargo | null>(null);
+
+  const [isLoading, setIsLoading] = useState(false); // Estado para controlar la carga de datos
+  const [error, setError] = useState(false); // Estado para controlar el error de datos
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -72,6 +63,28 @@ const SolicitudesForm: React.FC = () => {
     setProveido('');
   };
 
+  const fetchDependencias = async () => {
+    try {
+      const res = await getAllDependencias();
+      setDependenciasList(res)
+    } finally {
+      setIsLoading(false);
+    }
+  }
+
+  const fetchCargos = async () => {
+    try {
+      const res = await getAllCargos();
+      setCargosList(res)
+    } finally {
+      setIsLoading(false);
+    }
+  }
+
+  useEffect(() => {
+    fetchDependencias();
+    fetchCargos();
+  }, [])
 
   return (
     <div className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
@@ -93,45 +106,43 @@ const SolicitudesForm: React.FC = () => {
         </div>
 
         <div className="col-span-1 md:col-span-1 mb-5">
-          <label className="block text-gray-700 text-sm font-bold font-default mb-2" htmlFor="title">
+          <label className="block text-gray-700 text-sm font-bold font-default mb-2">
             Dependencia
           </label>
-          <Popover open={open} onOpenChange={setOpen}>
+          <Popover open={openDependencia} onOpenChange={setOpenDependencia}>
             <PopoverTrigger asChild>
               <Button
                 variant="outline"
                 role="combobox"
-                aria-expanded={open}
+                aria-expanded={openDependencia}
                 className="w-full justify-between text-left font-normal"
               >
-                {value
-                  ? cargos.find((framework) => framework.value === value)?.label
-                  : "-- Seleccionar dependencia -- "}
+                {selectedDependencia ? selectedDependencia.nombreDependencia : "-- Seleccionar dependencia --"}
                 <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
               </Button>
             </PopoverTrigger>
-            <PopoverContent className="w-[1000px] p-0">
+            <PopoverContent className="w-[500px] p-0">
               <Command>
-                <CommandInput placeholder="-- Seleccionar dependencia --" />
+                <CommandInput placeholder="Buscar dependencia" />
                 <CommandList>
-                  <CommandEmpty>No framework found.</CommandEmpty>
+                  <CommandEmpty>Ninguna dependencia encontrada.</CommandEmpty>
                   <CommandGroup>
-                    {cargos.map((framework) => (
+                    {dependenciasList.map((dependencia) => (
                       <CommandItem
-                        key={framework.value}
-                        value={framework.value}
-                        onSelect={(currentValue) => {
-                          setValue(currentValue === value ? "" : currentValue)
-                          setOpen(false)
+                        key={dependencia.id}
+                        value={dependencia.nombreDependencia}
+                        onSelect={() => {
+                          setSelectedDependencia(dependencia);
+                          setOpenDependencia(false);
                         }}
                       >
                         <Check
                           className={cn(
                             "mr-2 h-4 w-4",
-                            value === framework.value ? "opacity-100" : "opacity-0"
+                            selectedDependencia?.id === dependencia.id ? "opacity-100" : "opacity-0"
                           )}
                         />
-                        {framework.label}
+                        {dependencia.nombreDependencia}
                       </CommandItem>
                     ))}
                   </CommandGroup>
@@ -156,45 +167,44 @@ const SolicitudesForm: React.FC = () => {
         </div>
 
         <div className="col-span-1 md:col-span-1 mb-5">
-          <label className="block text-gray-700 text-sm font-bold font-default mb-2" htmlFor="title">
+          <label className="block text-gray-700 text-sm font-bold font-default mb-2">
             Cargo
           </label>
-          <Popover open={open} onOpenChange={setOpen}>
+          <Popover open={openCargo} onOpenChange={setOpenCargo}>
             <PopoverTrigger asChild>
               <Button
                 variant="outline"
                 role="combobox"
-                aria-expanded={open}
+                aria-expanded={openCargo}
                 className="w-full justify-between text-left font-normal"
               >
-                {value
-                  ? cargos.find((framework) => framework.value === value)?.label
-                  : "-- Seleccionar cargo --"}
+                {selectedCargo ? selectedCargo.nombreCargo : "-- Seleccionar cargo --"}
                 <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
               </Button>
             </PopoverTrigger>
-            <PopoverContent className="w-[1000px] p-0">
+            <PopoverContent className="w-[500px] p-0">
               <Command>
-                <CommandInput placeholder="-- Seleccionar cargo --" />
+                <CommandInput placeholder="Buscar cargo" />
                 <CommandList>
-                  <CommandEmpty>No framework found.</CommandEmpty>
+                  <CommandEmpty>Ningún cargo encontrado.</CommandEmpty>
                   <CommandGroup>
-                    {cargos.map((framework) => (
+                    {cargosList.map((cargo) => (
                       <CommandItem
-                        key={framework.value}
-                        value={framework.value}
-                        onSelect={(currentValue) => {
-                          setValue(currentValue === value ? "" : currentValue)
-                          setOpen(false)
+                        key={cargo.id}
+                        value={cargo.nombreCargo}
+                        onSelect={() => {
+                          setSelectedCargo(cargo);
+                          console.log(cargo)
+                          setOpenCargo(false);
                         }}
                       >
                         <Check
                           className={cn(
                             "mr-2 h-4 w-4",
-                            value === framework.value ? "opacity-100" : "opacity-0"
+                            selectedCargo?.id === cargo.id ? "opacity-100" : "opacity-0"
                           )}
                         />
-                        {framework.label}
+                        {cargo.nombreCargo}
                       </CommandItem>
                     ))}
                   </CommandGroup>
@@ -239,7 +249,7 @@ const SolicitudesForm: React.FC = () => {
           </label>
           <Select>
             <SelectTrigger className="w-full">
-              <SelectValue />
+              <SelectValue placeholder="-- Seleccionar --" />
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="nuevo">NUEVO</SelectItem>
@@ -250,11 +260,11 @@ const SolicitudesForm: React.FC = () => {
 
         <div className="flex items-center justify-between col-span-1 md:col-span-2"> {/* Columna que ocupa el ancho completo en pantallas pequeñas */}
           <Button
-            className="bg-uac text-white hover:bg-blue-900 transition duration-300 font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+            className="bg-uac text-white font-mulish border border-uac hover:bg-white hover:text-black transition duration-300 rounded py-2 px-4"
             type="submit"
           >
-            Agregar solicitud
-          </Button>
+            {isLoading ? <LoadingSpinner /> : "Agregar solicitud"}
+            </Button>
         </div>
       </form>
     </div>

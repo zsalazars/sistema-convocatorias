@@ -16,6 +16,13 @@
   font-style: normal;
 }
 
+@font-face {
+  font-family: 'Mulish';  /* Asegúrate de que el nombre coincide exactamente */
+  src: url('./assets/fonts/Mulish.ttf') format('truetype'); 
+  font-weight: normal;
+  font-style: normal;
+}
+
 @layer base {
   :root {
     --background: 0 0% 100%;

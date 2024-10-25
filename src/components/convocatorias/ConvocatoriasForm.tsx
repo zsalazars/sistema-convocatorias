@@ -1,13 +1,11 @@
 import React, { useState } from 'react';
 
-import { format } from "date-fns"
-import { es } from "date-fns/locale";
-import { CalendarIcon, Check, ChevronsUpDown } from 'lucide-react';
+import DatePicker from '../shared/ui/DatePicker';
+import { Check, ChevronsUpDown } from 'lucide-react';
 
 import { cn } from "@/libs/utils"
 import { Button } from "@/components/ui/button"
-
-import { Calendar } from "@/components/ui/calendar"
+import { Separator } from '@/components/ui/separator';
 
 import {
   Popover,
@@ -58,10 +56,13 @@ const cargos = [
 const ConvocatoriasForm: React.FC = () => {
   const [title, setTitle] = useState('');
   const [proveido, setProveido] = useState('');
-  const [date, setDate] = React.useState<Date>()
 
   const [open, setOpen] = React.useState(false)
   const [value, setValue] = React.useState("")
+
+  const [fechaPublicacion1, setFechaPublicacion1] = useState<Date | null>(null);
+  const [fechaPublicacion2, setFechaPublicacion2] = useState<Date | null>(null);
+  const [fechaPublicacion3, setFechaPublicacion3] = useState<Date | null>(null);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -75,25 +76,11 @@ const ConvocatoriasForm: React.FC = () => {
   return (
     <div className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
       <h2 className="text-2xl font-semibold font-gelion mb-6 text-gray-800">Nueva convocatoria</h2>
-      <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div className="col-span-1 md:col-span-1 mb-5">
-          <label className="block text-gray-700 text-sm font-bold font-default mb-2" htmlFor="title">
-            Documento
-          </label>
-          <input
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-            id="title"
-            type="text"
-            placeholder="Ej: OFICIO N° xxx-20xx-UNIDAD-UAC"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            required
-          />
-        </div>
 
-        <div className="col-span-1 md:col-span-1 mb-5">
-          <label className="block text-gray-700 text-sm font-bold font-default mb-2" htmlFor="title">
-            Dependencia
+      <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-12 gap-4">
+        <div className="col-span-1 md:col-span-4">
+          <label className="block text-gray-700 text-sm font-bold font-default mb-2">
+            Solicitud
           </label>
           <Popover open={open} onOpenChange={setOpen}>
             <PopoverTrigger asChild>
@@ -105,15 +92,15 @@ const ConvocatoriasForm: React.FC = () => {
               >
                 {value
                   ? cargos.find((framework) => framework.value === value)?.label
-                  : "-- Seleccionar dependencia -- "}
+                  : "-- Seleccionar solicitud -- "}
                 <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
               </Button>
             </PopoverTrigger>
-            <PopoverContent className="w-[1000px] p-0">
+            <PopoverContent className="w-[500px] p-0">
               <Command>
-                <CommandInput placeholder="-- Seleccionar dependencia --" />
+                <CommandInput placeholder="-- Seleccionar solicitud --" />
                 <CommandList>
-                  <CommandEmpty>No framework found.</CommandEmpty>
+                  <CommandEmpty>Ninguna solicitud encontrada.</CommandEmpty>
                   <CommandGroup>
                     {cargos.map((framework) => (
                       <CommandItem
@@ -140,109 +127,135 @@ const ConvocatoriasForm: React.FC = () => {
           </Popover>
         </div>
 
-        <div className="col-span-1 md:col-span-1 mb-5">
-          <label className="block text-gray-700 text-sm font-bold font-default mb-2" htmlFor="proveido">
-            Proveido
+        <div className="col-span-1 md:col-span-4 mb-5">
+          <label className="block text-gray-700 text-sm font-bold font-default mb-2">
+            Tipo de la convocatoria
           </label>
-          <input
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-            id="proveido"
-            type="text"
-            value={proveido}
-            onChange={(e) => setProveido(e.target.value)}
-            required
+          <Select>
+            <SelectTrigger className="w-full">
+              <SelectValue placeholder="-- Seleccionar --" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="INTERNA">INTERNA</SelectItem>
+              <SelectItem value="EXTERNA">EXTERNA</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+
+        <div className="col-span-1 md:col-span-4 mb-5">
+          <label className="block text-gray-700 text-sm font-bold font-default mb-2">
+            Modalidad de la convocatoria
+          </label>
+          <Select>
+            <SelectTrigger className="w-full">
+              <SelectValue placeholder="-- Seleccionar --" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="REGIONAL">REGIONAL</SelectItem>
+              <SelectItem value="NACIONAL">NACIONAL</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+
+        <div className="col-span-1 md:col-span-12 my-5">
+          <Separator />
+        </div>
+
+        <div className="col-span-1 md:col-span-12">
+          <h3 className="text-xl font-semibold font-gelion">Fechas de la convocatoria</h3>
+        </div>
+
+        <div className="col-span-1 md:col-span-3 mb-5">
+          <label className="block text-gray-700 text-sm font-bold font-default mb-2" htmlFor="title">
+            Publicación de la convocatoria
+          </label>
+          <DatePicker
+            selectedDate={fechaPublicacion1}
+            onDateSelect={setFechaPublicacion1}
           />
         </div>
 
-        <div className="col-span-1 md:col-span-1 mb-5">
+        <div className="col-span-1 md:col-span-3 mb-5">
           <label className="block text-gray-700 text-sm font-bold font-default mb-2" htmlFor="title">
-            Cargo
+            Presentación de documentos
           </label>
-          <Popover open={open} onOpenChange={setOpen}>
-            <PopoverTrigger asChild>
-              <Button
-                variant="outline"
-                role="combobox"
-                aria-expanded={open}
-                className="w-full justify-between text-left font-normal"
-              >
-                {value
-                  ? cargos.find((framework) => framework.value === value)?.label
-                  : "-- Seleccionar cargo --"}
-                <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-              </Button>
-            </PopoverTrigger>
-            <PopoverContent className="w-[1000px] p-0">
-              <Command>
-                <CommandInput placeholder="-- Seleccionar cargo --" />
-                <CommandList>
-                  <CommandEmpty>No framework found.</CommandEmpty>
-                  <CommandGroup>
-                    {cargos.map((framework) => (
-                      <CommandItem
-                        key={framework.value}
-                        value={framework.value}
-                        onSelect={(currentValue) => {
-                          setValue(currentValue === value ? "" : currentValue)
-                          setOpen(false)
-                        }}
-                      >
-                        <Check
-                          className={cn(
-                            "mr-2 h-4 w-4",
-                            value === framework.value ? "opacity-100" : "opacity-0"
-                          )}
-                        />
-                        {framework.label}
-                      </CommandItem>
-                    ))}
-                  </CommandGroup>
-                </CommandList>
-              </Command>
-            </PopoverContent>
-          </Popover>
+          <DatePicker
+            selectedDate={fechaPublicacion1}
+            onDateSelect={setFechaPublicacion1}
+          />
         </div>
 
-        <div className="col-span-1 md:col-span-1 mb-5">
+        <div className="col-span-1 md:col-span-3 mb-5">
           <label className="block text-gray-700 text-sm font-bold font-default mb-2" htmlFor="title">
-            Fecha
+            Calificación de documentos
           </label>
-          <Popover>
-            <PopoverTrigger asChild>
-              <Button
-                variant={"outline"}
-                className={cn(
-                  "w-full justify-start text-left font-normal",
-                  !date && "text-muted-foreground"
-                )}
-              >
-                <CalendarIcon />
-                {date ? format(date, "PPP", { locale: es }) : <span>Elegir fecha</span>}
-              </Button>
-            </PopoverTrigger>
-            <PopoverContent className="w-auto p-0" align="start">
-              <Calendar
-                mode="single"
-                selected={date}
-                onSelect={setDate}
-                initialFocus
-                locale={es}
-              />
-            </PopoverContent>
-          </Popover>
+          <DatePicker
+            selectedDate={fechaPublicacion2}
+            onDateSelect={setFechaPublicacion2}
+          />
         </div>
 
-        <div className="col-span-1 md:col-span-1 mb-5">
+        <div className="col-span-1 md:col-span-3 mb-5">
+          <label className="block text-gray-700 text-sm font-bold font-default mb-2" htmlFor="title">
+            Publicación de aptos
+          </label>
+          <DatePicker
+            selectedDate={fechaPublicacion3}
+            onDateSelect={setFechaPublicacion3}
+          />
+        </div>
+
+        <div className="col-span-1 md:col-span-3 mb-5">
+          <label className="block text-gray-700 text-sm font-bold font-default mb-2" htmlFor="title">
+            Publicación de horarios de entrevista
+          </label>
+          <DatePicker
+            selectedDate={fechaPublicacion3}
+            onDateSelect={setFechaPublicacion3}
+          />
+        </div>
+
+        <div className="col-span-1 md:col-span-3 mb-5">
+          <label className="block text-gray-700 text-sm font-bold font-default mb-2" htmlFor="title">
+            Entrevista personal
+          </label>
+          <DatePicker
+            selectedDate={fechaPublicacion3}
+            onDateSelect={setFechaPublicacion3}
+          />
+        </div>
+
+        <div className="col-span-1 md:col-span-3 mb-5">
+          <label className="block text-gray-700 text-sm font-bold font-default mb-2" htmlFor="title">
+            Publicación de resultados
+          </label>
+          <DatePicker
+            selectedDate={fechaPublicacion3}
+            onDateSelect={setFechaPublicacion3}
+          />
+        </div>
+
+        <div className="col-span-1 md:col-span-3 mb-5">
+          <label className="block text-gray-700 text-sm font-bold font-default mb-2" htmlFor="title">
+            Inicio de funciones
+          </label>
+          <DatePicker
+            selectedDate={fechaPublicacion3}
+            onDateSelect={setFechaPublicacion3}
+          />
+        </div>
+
+        <div className="col-span-1 md:col-span-2 mb-5">
           <label className="block text-gray-700 text-sm font-bold font-default mb-2" htmlFor="title">
             Estado
           </label>
           <Select>
             <SelectTrigger className="w-full">
-              <SelectValue />
+              <SelectValue placeholder="-- Seleccionar --" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="nuevo">NUEVO</SelectItem>
-              <SelectItem value="reingreso">REINGRESO</SelectItem>
+              <SelectItem value="ABIERTO">ABIERTO</SelectItem>
+              <SelectItem value="CERRADO">CERRADO</SelectItem>
             </SelectContent>
           </Select>
         </div>
@@ -252,7 +265,7 @@ const ConvocatoriasForm: React.FC = () => {
             className="bg-uac text-white hover:bg-blue-900 transition duration-300 font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
             type="submit"
           >
-            Agregar solicitud
+            Publicar nueva convocatoria
           </Button>
         </div>
       </form>

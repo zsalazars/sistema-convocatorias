@@ -9,7 +9,8 @@ export default {
   	extend: {
   		fontFamily: {
   			default: ['OpenSans', 'sans-serif'],
-  			gelion: ['Gelion', 'sans-serif']
+  			gelion: ['Gelion', 'sans-serif'],
+				mulish: ['Mulish', 'sans-serif']
   		},
   		textColor: {
   			'uac': '#1C4378',
@@ -20,6 +21,10 @@ export default {
   			'uac-alter': '#00CDFF',
 				'white-alter' : '#F3F4F6'
   		},
+			borderColor: {
+				'uac': '#1C4378',
+  			'uac-alter': '#00CDFF'
+			},
   		borderRadius: {
   			lg: 'var(--radius)',
   			md: 'calc(var(--radius) - 2px)',

@@ -1,7 +1,7 @@
 import CargosForm from "./CargosForm"
 import CargosList from "./CargosList"
 
-function Cargos() {
+const Cargos = () => {
   return (
     <>
       <CargosForm />

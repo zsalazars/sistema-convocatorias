@@ -1,17 +1,22 @@
-// src/axios.js
+// axiosInstance.ts
 import axios from 'axios';
-import Cookies from 'js-cookie';
 
-const instance = axios.create({
-  baseURL: import.meta.env.VITE_API_URL,
+const axiosInstance = axios.create({
+  baseURL: 'https://tu-api.com', // Reemplaza con tu URL base
 });
 
-instance.interceptors.request.use((config) => {
-  const token = Cookies.get('token');
-  if (token) {
-    config.headers['Authorization'] = `Bearer ${token}`;
+axiosInstance.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response && (error.response.status === 401 || error.response.data.message === 'Token expired')) {
+      // Limpiar cualquier token almacenado
+      document.cookie = "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+      
+      // Redirigir al login
+      window.location.href = '/login';
+    }
+    return Promise.reject(error);
   }
-  return config;
-});
+);
 
-export default instance;
+export default axiosInstance;

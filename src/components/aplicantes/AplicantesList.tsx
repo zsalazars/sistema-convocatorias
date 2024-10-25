@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { DataTable } from './AplicantesTable';
 import { columns } from './Columns';
 import { Aplicante } from '@/interfaces/model/Aplicante';

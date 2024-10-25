@@ -8,7 +8,7 @@ interface ProtectedRouteProps {
 }
 
 const ProtectedRoutes = ({ children }: ProtectedRouteProps) => {
-  const token = Cookies.get('token');
+  const token = Cookies.get('authToken');
   const location = useLocation();
 
   if (!token) {

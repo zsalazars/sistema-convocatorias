@@ -22,7 +22,6 @@ const Login: React.FC = () => {
     // Esta función ahora decodifica el token y almacena la información del usuario
     login(res);
 
-
     navigate('/');
   };
 
