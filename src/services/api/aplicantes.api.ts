@@ -1,4 +1,3 @@
-import { CargoForm } from "@/interfaces/model/Cargo";
 import axios from "axios";
 import Cookies from "js-cookie";
 
@@ -6,10 +5,10 @@ const cargoApi = axios.create({
   baseURL: import.meta.env.VITE_API_URL
 })
 
-export const getAllCargos = async () => {
+export const getAllAplicantes = async () => {
   const token = Cookies.get('authToken');
 
-  const res = await cargoApi.get("api/cargos", {
+  const res = await cargoApi.get("api/aplicantes", {
     headers: {
       "Content-Type": "application/json",
       'Authorization': `Bearer ${token}`
@@ -19,13 +18,15 @@ export const getAllCargos = async () => {
   return res.data;
 };
 
-export const createCargo = async (cargo: CargoForm) => {
+export const getAplicanteById = async (id: number) => {
   const token = Cookies.get('authToken');
 
-  cargoApi.post("api/cargos", cargo, {
+  const res = await cargoApi.get(`api/aplicantes/${id}`, {
     headers: {
       "Content-Type": "application/json",
       'Authorization': `Bearer ${token}`
     }
   })
-};
+
+  return res.data;
+}

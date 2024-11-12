@@ -1,28 +1,32 @@
-import { CargoForm } from "@/interfaces/model/Cargo";
+import { SolicitudForm } from "@/interfaces/model/Solicitud";
 import axios from "axios";
 import Cookies from "js-cookie";
 
-export const getAllCargos = async () => {
-  const apiUrl = import.meta.env.VITE_API_URL;
+const solicitudApi = axios.create({
+  baseURL: import.meta.env.VITE_API_URL
+})
+
+export const getAllSolicitudes = async () => {
   const token = Cookies.get('authToken');
 
-  const response = await axios.get(`${apiUrl}api/solicitudes`, {
+  const res = await solicitudApi.get("api/solicitudes", {
     headers: {
       "Content-Type": "application/json",
-      'Authorization': `Bearer ${token}`
+      "Authorization": `Bearer ${token}`
     }
   })
-  return response.data;
+  
+  return res.data;
 };
 
-export const createCargo = async (cargo: CargoForm) => {
-  const apiUrl = import.meta.env.VITE_API_URL;
+export const createSolicitud = async (solicitud: SolicitudForm) => {
   const token = Cookies.get('authToken');
 
-  axios.post(`${apiUrl}api/solicitudes`, cargo, {
+  console.log(solicitud)
+  solicitudApi.post("api/solicitudes", solicitud, {
     headers: {
       "Content-Type": "application/json",
-      'Authorization': `Bearer ${token}`
+      "Authorization": `Bearer ${token}`
     }
   })
 };
