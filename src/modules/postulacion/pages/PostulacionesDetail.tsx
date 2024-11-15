@@ -1,6 +1,6 @@
 import { useParams } from "react-router-dom";
 import FileDropzone from "../components/FileDropzone";
-import { useGetConvocatoriaById } from "../hooks/useGetConvocatoriaById";
+import { useGetConvocatoriaById } from "../hooks/useConvocatoria";
 import LoadingSpinner from "@/shared/components/common/LoadingSpinner";
 
 const PostulacionDetalle = () => {

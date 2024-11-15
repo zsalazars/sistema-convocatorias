@@ -1,18 +1,18 @@
 import { useParams } from 'react-router-dom';
 
-import { Aplicante } from '@/interfaces/Aplicante';
-import { getAplicantesByConvocatoriaId } from '@/modules/convocatoria/services/convocatoria.api';
+import { Postulacion } from '@/interfaces/Postulacion';
+import { getPostulantesByConvocatoriaId } from '@/modules/convocatoria/services/convocatoria.api';
 import { useQuery } from '@tanstack/react-query'
 import { columns } from '../utils/Columns';
-import { DataTable } from '@/modules/aplicante/components/AplicantesTable';
+import DataTable from '@/modules/postulante/components/PostulantesTable';
 
 const ConvocatoriasAplicantes = () => {
   const { id } = useParams();
   const convocatoriaId = Number(id);
 
-  const { isLoading, data: aplicantesList = [], error, isError } = useQuery<Aplicante[]>({
+  const { isLoading, data: aplicantesList = [], error, isError } = useQuery<Postulacion[]>({
     queryKey: ["aplicantes", convocatoriaId],
-    queryFn: () => getAplicantesByConvocatoriaId(convocatoriaId),
+    queryFn: () => getPostulantesByConvocatoriaId(convocatoriaId),
     enabled: !!convocatoriaId
   })
 

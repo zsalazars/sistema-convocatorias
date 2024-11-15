@@ -1,5 +1,5 @@
-import CargosForm from "./components/CargosForm"
-import CargosList from "./components/CargosList"
+import CargosForm from "../components/CargosForm"
+import CargosList from "../components/CargosList"
 
 const Cargos = () => {
   return (

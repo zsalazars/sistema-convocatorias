@@ -7,20 +7,20 @@ import DashboardLayout from '@/shared/components/layouts/DashboardLayout';
 // Componentes cargados de forma asíncrona
 const Admin = lazy(() => import('@/modules/dashboard/DashboardHome'));
 const Login = lazy(() => import('@/modules/auth/Login'));
-const Cargos = lazy(() => import('@/modules/cargo/Cargos'));
-const Dependencia = lazy(() => import('@/modules/dependencia/Dependencias'))
-const Aplicantes = lazy(() => import('../modules/aplicante/Aplicantes'));
-const Solicitudes = lazy(() => import('../modules/solicitud/Solicitudes'));
-const Convocatorias = lazy(() => import('@/modules/convocatoria/Convocatorias'));
+const Cargos = lazy(() => import('@/modules/cargo/pages/CargosMain'));
+const Dependencia = lazy(() => import('@/modules/dependencia/pages/DependenciasMain'))
+const Aplicantes = lazy(() => import('../modules/postulante/pages/PostulantesMain'));
+const Solicitudes = lazy(() => import('@/modules/solicitud/pages/SolicitudesMain'));
+const Convocatorias = lazy(() => import('@/modules/convocatoria/pages/ConvocatoriasMain'));
 const NuevaConvocatoria = lazy(() => import('@/modules/convocatoria/components/ConvocatoriasForm'));
 const ConvocatoriasAplicantes = lazy(() => import('@/modules/convocatoria/pages/ConvocatoriasAplicantes'))
-const Calificaciones = lazy(() => import('@/modules/calificacion/Calificaciones'))
-const CalificacionDocumentos = lazy(() => import('@/modules/convocatoria/pages/CalificacionDocumentos'))
-const CalificacionRequisitos = lazy(() => import('@/modules/convocatoria/pages/CalificacionRequisitos'))
+const Calificaciones = lazy(() => import('@/modules/calificacion/pages/CalificacionesMain'))
+const CalificacionDetail = lazy(() => import('@/modules/calificacion/pages/CalificacionDetail'))
+const CalificacionDocumentos = lazy(() => import('@/modules/calificacion/pages/CalificacionDocumentos'))
+const CalificacionRequisitos = lazy(() => import('@/modules/calificacion/pages/CalificacionRequisitos'))
 
-const Postulaciones = lazy(() => import('@/modules/postulacion/Postulaciones'));
-const PostulacionDetail = lazy(() => import('@/modules/postulacion/pages/PostulacionDetail'));
-
+const Postulaciones = lazy(() => import('@/modules/postulacion/pages/PostulacionesMain'));
+const PostulacionDetail = lazy(() => import('@/modules/postulacion/pages/PostulacionesDetail'));
 
 // Rutas configuradas en un array
 const routes = [
@@ -33,6 +33,7 @@ const routes = [
   { path: "/convocatorias/nueva-convocatoria", element: <NuevaConvocatoria /> },
   { path: "/convocatorias/:id", element: <ConvocatoriasAplicantes /> },
   { path: "/calificaciones", element: <Calificaciones /> },
+  { path: "/calificaciones/:id", element: <CalificacionDetail /> },
   { path: "/calificaciones/documentos/:id", element: <CalificacionDocumentos /> },
   { path: "/calificaciones/requisitos/:id", element: <CalificacionRequisitos /> },
   { path: "/dependencias", element: <Dependencia /> }

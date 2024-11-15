@@ -1,4 +1,4 @@
-import { Aplicante } from "@/interfaces/Aplicante"
+import { Aplicante } from "@/interfaces/Postulacion"
 import { ColumnDef } from "@tanstack/react-table"
 
 export const columns: ColumnDef<Aplicante>[] = [

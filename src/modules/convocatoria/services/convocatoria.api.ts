@@ -19,10 +19,10 @@ export const getAllConvocatorias = async () => {
   return res.data;
 }
 
-export const getAplicantesByConvocatoriaId = async (id: number) => {
+export const getPostulantesByConvocatoriaId = async (id: number) => {
   const token = Cookies.get("authToken");
 
-  const res = await convocatoriaApi.get(`api/aplicantes/convocatorias/${id}`, {
+  const res = await convocatoriaApi.get(`api/postulaciones/convocatorias/${id}`, {
     headers: {
       "Content-Type": "application/json",
       "Authorization": `Bearer ${token}`

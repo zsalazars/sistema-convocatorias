@@ -1,5 +1,5 @@
-import ConvocatoriasList from './components/ConvocatoriasList'
-import DocumentGeneratorForm from './components/DocumentGeneratorForm'
+import ConvocatoriasList from '../components/ConvocatoriasList'
+import DocumentGeneratorForm from '../components/DocumentGeneratorForm'
 
 function Convocatorias() {
   return (

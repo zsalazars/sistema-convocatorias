@@ -1,9 +1,13 @@
 import { Link } from "react-router-dom"
 import { Button } from "@/shared/components/ui/button"
-import { Aplicante } from "@/interfaces/Aplicante"
+import { Postulacion } from "@/interfaces/Postulacion"
 import { ColumnDef } from "@tanstack/react-table"
 
-export const columns: ColumnDef<Aplicante>[] = [
+export const columns: ColumnDef<Postulacion>[] = [
+  {
+    accessorKey: "convocatoria.numeroConvocatoria",
+    header: "N° Convocatoria",
+  },
   {
     accessorKey: "nombres",
     header: "Nombres",
@@ -30,13 +34,17 @@ export const columns: ColumnDef<Aplicante>[] = [
   },
   {
     accessorKey: "convocatoria.solicitud.cargo.nombreCargo",
-    header: "Convocatoria",
+    header: "Cargo",
+  },
+  {
+    accessorKey: "puntuacion",
+    header: "Puntuación",
   },
   {
     header: "Acciones",
     cell: ({ row }) => (
       <div className="flex gap-2">
-        <Link to={`/calificaciones/documentos/${row.original.id}`}>
+        <Link to={`/calificaciones/${row.original.id}`}>
           <Button className="bg-uac hover:bg-uac-alter transition duration-300">
             Calificar
           </Button>

@@ -1,13 +1,13 @@
-import { getAllAplicantes } from '@/modules/aplicante/services/aplicantes.api';
-import { DataTable } from './AplicantesTable';
+import { getAllPostulacion } from '@/modules/postulante/services/postulantes.api';
+import DataTable from './PostulantesTable';
 import { columns } from '../utils/Columns';
-import { Aplicante } from '@/interfaces/Aplicante';
+import { Postulacion } from '@/interfaces/Postulacion';
 import { useQuery } from '@tanstack/react-query'
 
-const AplicantesList = () => {
-  const { isLoading, data: aplicantesList = [], error, isError } = useQuery<Aplicante[]>({
-    queryKey: ["aplicantes"],
-    queryFn: getAllAplicantes
+const PostulantesList = () => {
+  const { isLoading, data: postulacionList = [], error, isError } = useQuery<Postulacion[]>({
+    queryKey: ["postulacion"],
+    queryFn: getAllPostulacion
   })
 
   if (isLoading) {
@@ -24,10 +24,10 @@ const AplicantesList = () => {
         <h2 className="text-xl font-semibold text-gray-800">Ver postulantes</h2>
       </div>
       <div className="container mx-auto py-5">
-        <DataTable columns={columns} data={aplicantesList} />
+        <DataTable columns={columns} data={postulacionList} />
       </div>
     </div>
   );
 };
 
-export default AplicantesList;
+export default PostulantesList;

@@ -40,12 +40,10 @@ import DatePickerWithRange from '@/shared/components/common/DatePickerWithRange'
 import { formatDate } from '@/shared/utils/formatter';
 import { createConvocatoria } from '@/modules/convocatoria/services/convocatoria.api';
 import { toast } from 'sonner';
-import { format } from 'date-fns';
-import { es } from 'date-fns/locale';
 
 const ConvocatoriasForm: React.FC = () => {
 
-  const { register, handleSubmit, setValue, formState: { errors }, reset } = useForm<ConvocatoriaForm>();
+  const { handleSubmit, setValue, reset } = useForm<ConvocatoriaForm>();
 
   const [open, setOpen] = React.useState(false)
   const [selectedSolicitud, setSelectedSolicitud] = React.useState("")
@@ -74,10 +72,7 @@ const ConvocatoriasForm: React.FC = () => {
     return <div>Error: {error instanceof Error ? error.message : 'Algo salió mal'}</div>;
   }
 
-
   const onSubmit: SubmitHandler<ConvocatoriaForm> = (data) => {
-    const formattedData = format(new Date(data.solicitud.fechaSolicitud), 'dd-MM-yyyy', { locale: es });
-    setValue("solicitud.fechaSolicitud", formattedData)
     addConvocatoriaMutation.mutate(data);
   };
 

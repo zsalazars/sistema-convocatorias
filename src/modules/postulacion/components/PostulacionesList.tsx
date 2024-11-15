@@ -1,5 +1,5 @@
 import LoadingSpinner from "@/shared/components/common/LoadingSpinner";
-import { useGetConvocatorias } from "../hooks/useGetConvocatorias";
+import { useGetConvocatorias } from "../hooks/useConvocatoria";
 import PostulacionCard from "../components/PostulacionCard";
 
 const PostulacionesList = () => {
