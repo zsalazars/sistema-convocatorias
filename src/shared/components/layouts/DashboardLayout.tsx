@@ -8,15 +8,15 @@ const DashboardLayout = ({ children }: { children: ReactNode }) => {
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
 
   return (
-    <div className="flex min-h-screen h-screen overflow-hidden bg-white">
+    <div className="flex h-screen min-h-screen overflow-hidden bg-white">
       
       {/* Sidebar */}
       <Sidebar isMobileSidebarOpen={isMobileSidebarOpen} setIsMobileSidebarOpen={setIsMobileSidebarOpen} />
 
       {/* Main Content Container */}
-      <div className="flex-1 flex flex-col w-full overflow-hidden">
+      <div className="flex flex-col flex-1 w-full overflow-hidden">
         {/* Header */}
-        <header className="bg-white shadow-sm h-16 flex items-center px-4">
+        <header className="flex items-center h-16 px-4 bg-white shadow-sm">
           <button
             className="text-gray-500 hover:text-gray-600 focus:outline-none focus:text-gray-600 xl:hidden"
             onClick={() => setIsMobileSidebarOpen(!isMobileSidebarOpen)}
@@ -25,18 +25,18 @@ const DashboardLayout = ({ children }: { children: ReactNode }) => {
           </button>
           <div className="flex items-center justify-end flex-1 ml-4">
             <img
-              className="h-12 w-auto hidden sm:block"
+              className="hidden w-auto h-12 sm:block"
               src={logotipo_horizontal_uac}
               alt="UAC Logo"
             />
-            <h1 className="text-xl sm:text-2xl font-gelion text-gray-900">
+            <h1 className="text-xl text-gray-900 sm:text-2xl font-gelion">
               Convocatorias UAC
             </h1>
           </div>
         </header>
 
         {/* Main Content - Scrollable */}
-        <main className="flex-1 overflow-auto m-5 p-4">
+        <main className="flex-1 p-1 m-2 overflow-auto md:m-5 md:p-4">
           {children}
         </main>
       </div>

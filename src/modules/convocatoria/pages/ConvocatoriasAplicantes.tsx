@@ -26,13 +26,13 @@ const ConvocatoriasAplicantes = () => {
 
   return (
     <div className="bg-white shadow-md rounded-lg overflow-hidden">
-    <div className="px-6 py-4 bg-gray-50 border-b border-gray-200">
-      <h2 className="text-xl font-semibold text-gray-800">Ver postulantes</h2>
+      <div className="px-6 py-4 bg-gray-50 border-b border-gray-200">
+        <h2 className="text-xl font-semibold text-gray-800">Ver postulantes</h2>
+      </div>
+      <div className="container mx-auto py-5">
+        <DataTable columns={columns} data={aplicantesList} />
+      </div>
     </div>
-    <div className="container mx-auto py-5">
-      <DataTable columns={columns} data={aplicantesList} />
-    </div>
-  </div>
   )
 }
 

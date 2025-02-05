@@ -29,15 +29,15 @@ import { createSolicitud } from '@/modules/solicitud/services/solicitud.api';
 import { toast, Toaster } from 'sonner';
 
 const SolicitudesForm: React.FC = () => {
-  const { 
+  const {
     register,
     handleSubmit,
     control,
     setValue,
     reset,
-    watch 
+    watch
   } = useForm<SolicitudForm>();
-  
+
   const [dependenciasList, setDependenciasList] = useState<Dependencia[]>([]);
   const [cargosList, setCargosList] = useState<Cargo[]>([]);
   const [openDependencia, setOpenDependencia] = useState(false);
@@ -66,15 +66,16 @@ const SolicitudesForm: React.FC = () => {
 
   const onSubmit = async (data: SolicitudForm) => {
     setIsLoading(true);
-  
+
     // Formatear la fecha antes de enviar los datos
     const formattedData = {
       ...data,
       fechaSolicitud: data.fechaSolicitud
         ? format(new Date(data.fechaSolicitud), 'dd-MM-yyyy', { locale: es })
         : '',
+      estado: 'NUEVO'
     };
-  
+
     try {
       await createSolicitud(formattedData);
       reset();
@@ -85,7 +86,7 @@ const SolicitudesForm: React.FC = () => {
       setIsLoading(false);
     }
   };
-  
+
 
   const selectedDependencia = watch("dependencia");
   const selectedCargo = watch("cargo");
@@ -97,26 +98,87 @@ const SolicitudesForm: React.FC = () => {
 
   return (
     <>
-      <div className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
-        <h2 className="text-2xl font-semibold font-gelion mb-6 text-gray-800">Agregar nueva solicitud</h2>
-        <form onSubmit={handleSubmit(onSubmit)} className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div className="px-4 py-4 mb-2 bg-white rounded shadow-md md:px-8">
+        <h2 className="mb-6 text-2xl font-semibold text-gray-800 font-gelion">Nueva solicitud</h2>
+        <form onSubmit={handleSubmit(onSubmit)} className="grid grid-cols-1 gap-4 md:grid-cols-4">
           {/* Documento */}
-          <div className="col-span-1 md:col-span-1 mb-5">
-            <label className="block text-gray-700 text-sm font-bold font-default mb-2" htmlFor="nombreDocumento">
+          <div className="col-span-1 mb-5 md:col-span-2">
+            <label className="block mb-2 text-sm font-bold text-gray-700 font-default" htmlFor="nombreDocumento">
               Documento
             </label>
             <input
               {...register("nombreDocumento", { required: true })}
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              className="w-full px-3 py-2 leading-tight text-gray-700 border rounded shadow appearance-none focus:outline-none focus:shadow-outline"
               id="nombreDocumento"
               type="text"
               placeholder="Ej: OFICIO N° xxx-20xx-UNIDAD-UAC"
             />
           </div>
 
+          {/* Cargo */}
+          <div className="col-span-1 mb-5 md:col-span-2">
+            <label className="block mb-2 text-sm font-bold text-gray-700 font-default">
+              Cargo
+            </label>
+            <Popover open={openCargo} onOpenChange={setOpenCargo}>
+              <PopoverTrigger asChild>
+                <Button
+                  variant="outline"
+                  role="combobox"
+                  aria-expanded={openCargo}
+                  className="justify-between w-full font-normal text-left"
+                >
+                  {selectedCargo ? selectedCargo.nombreCargo : "-- Seleccionar cargo --"}
+                  <ChevronsUpDown className="w-4 h-4 ml-2 opacity-50 shrink-0" />
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-[700px] p-0">
+                <Command>
+                  <CommandInput placeholder="Buscar cargo" />
+                  <CommandList>
+                    <CommandEmpty>Ningún cargo encontrado.</CommandEmpty>
+                    <CommandGroup>
+                      {cargosList.map((cargo) => (
+                        <CommandItem
+                          key={cargo.id}
+                          value={cargo.nombreCargo}
+                          onSelect={() => {
+                            setValue("cargo", cargo);
+                            setOpenCargo(false);
+                          }}
+                        >
+                          <Check
+                            className={cn(
+                              "mr-2 h-4 w-4",
+                              selectedCargo?.id === cargo.id ? "opacity-100" : "opacity-0"
+                            )}
+                          />
+                          {cargo.nombreCargo}
+                        </CommandItem>
+                      ))}
+                    </CommandGroup>
+                  </CommandList>
+                </Command>
+              </PopoverContent>
+            </Popover>
+          </div>
+
+          {/* Proveido */}
+          <div className="col-span-1 mb-5 md:col-span-1">
+            <label className="block mb-2 text-sm font-bold text-gray-700 font-default" htmlFor="proveido">
+              Proveido
+            </label>
+            <input
+              {...register("proveido", { required: true })}
+              className="w-full px-3 py-2 leading-tight text-gray-700 border rounded shadow appearance-none focus:outline-none focus:shadow-outline"
+              id="proveido"
+              type="text"
+            />
+          </div>
+
           {/* Dependencia */}
-          <div className="col-span-1 md:col-span-1 mb-5">
-            <label className="block text-gray-700 text-sm font-bold font-default mb-2">
+          <div className="col-span-1 mb-5 md:col-span-1">
+            <label className="block mb-2 text-sm font-bold text-gray-700 font-default">
               Dependencia
             </label>
             <Popover open={openDependencia} onOpenChange={setOpenDependencia}>
@@ -125,10 +187,10 @@ const SolicitudesForm: React.FC = () => {
                   variant="outline"
                   role="combobox"
                   aria-expanded={openDependencia}
-                  className="w-full justify-between text-left font-normal"
+                  className="justify-between w-full font-normal text-left"
                 >
                   {selectedDependencia ? selectedDependencia.nombreDependencia : "-- Seleccionar dependencia --"}
-                  <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                  <ChevronsUpDown className="w-4 h-4 ml-2 opacity-50 shrink-0" />
                 </Button>
               </PopoverTrigger>
               <PopoverContent className="w-[500px] p-0">
@@ -162,70 +224,9 @@ const SolicitudesForm: React.FC = () => {
             </Popover>
           </div>
 
-          {/* Proveido */}
-          <div className="col-span-1 md:col-span-1 mb-5">
-            <label className="block text-gray-700 text-sm font-bold font-default mb-2" htmlFor="proveido">
-              Proveido
-            </label>
-            <input
-              {...register("proveido", { required: true })}
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              id="proveido"
-              type="text"
-            />
-          </div>
-
-          {/* Cargo */}
-          <div className="col-span-1 md:col-span-1 mb-5">
-            <label className="block text-gray-700 text-sm font-bold font-default mb-2">
-              Cargo
-            </label>
-            <Popover open={openCargo} onOpenChange={setOpenCargo}>
-              <PopoverTrigger asChild>
-                <Button
-                  variant="outline"
-                  role="combobox"
-                  aria-expanded={openCargo}
-                  className="w-full justify-between text-left font-normal"
-                >
-                  {selectedCargo ? selectedCargo.nombreCargo : "-- Seleccionar cargo --"}
-                  <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                </Button>
-              </PopoverTrigger>
-              <PopoverContent className="w-[500px] p-0">
-                <Command>
-                  <CommandInput placeholder="Buscar cargo" />
-                  <CommandList>
-                    <CommandEmpty>Ningún cargo encontrado.</CommandEmpty>
-                    <CommandGroup>
-                      {cargosList.map((cargo) => (
-                        <CommandItem
-                          key={cargo.id}
-                          value={cargo.nombreCargo}
-                          onSelect={() => {
-                            setValue("cargo", cargo);
-                            setOpenCargo(false);
-                          }}
-                        >
-                          <Check
-                            className={cn(
-                              "mr-2 h-4 w-4",
-                              selectedCargo?.id === cargo.id ? "opacity-100" : "opacity-0"
-                            )}
-                          />
-                          {cargo.nombreCargo}
-                        </CommandItem>
-                      ))}
-                    </CommandGroup>
-                  </CommandList>
-                </Command>
-              </PopoverContent>
-            </Popover>
-          </div>
-
           {/* Fecha */}
-          <div className="col-span-1 md:col-span-1 mb-5">
-            <label className="block text-gray-700 text-sm font-bold font-default mb-2">
+          <div className="col-span-1 mb-5 md:col-span-1">
+            <label className="block mb-2 text-sm font-bold text-gray-700 font-default">
               Fecha
             </label>
             <Controller
@@ -251,8 +252,8 @@ const SolicitudesForm: React.FC = () => {
           </div>
 
           {/* Submit */}
-          <div className="col-span-1 md:col-span-3 flex justify-end my-auto">
-            <Button type="submit" disabled={isLoading}>
+          <div className="flex justify-end w-full col-span-1 my-auto md:col-span-1">
+            <Button className="w-full mt-auto" type="submit" disabled={isLoading}>
               {isLoading ? <LoadingSpinner /> : 'Guardar'}
             </Button>
           </div>

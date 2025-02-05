@@ -66,7 +66,6 @@ const AppRoutes = () => {
             }
           />
         ))}
-
       </Routes>
     </Suspense>
   );

@@ -17,14 +17,12 @@ const CalificacionDocumentosPage = () => {
   const { id } = useParams();
   const postulacionId = Number(id);
 
-
   const [status, setStatus] = useState<'pending' | 'approved' | 'rejected'>('pending');
 
   const { isLoading, data: postulacion, error, isError } = useQuery<Postulacion>({
     queryKey: ["postulacion", postulacionId],
     queryFn: () => getPostulacionById(postulacionId),
     enabled: !!postulacionId
-
   })
 
   const [formData, setFormData] = useState({
@@ -41,7 +39,6 @@ const CalificacionDocumentosPage = () => {
     voucherPago: false,
     observaciones: ''
   });
-
 
   useEffect(() => {
     if (postulacion) {
@@ -205,7 +202,7 @@ const CalificacionDocumentosPage = () => {
               onClick={() => mutation.mutate(formData)}
               className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-500 transition-colors"
             >
-              Guardar Cambios
+              Guardar
             </button>
           </div>
 
